@@ -3,7 +3,6 @@
 class Comment {
   String text = "";
   final int commentId;
-  Story story;
   Comment({this.commentId, this.text});
 
   factory Comment.fromJSON(Map<String, dynamic> json) {
