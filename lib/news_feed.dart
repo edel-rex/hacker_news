@@ -2,7 +2,6 @@
 
 import 'dart:convert';
 
-
 import 'package:flutter/material.dart';
 import 'package:hacker_news/news_content.dart';
 import 'package:hacker_news/web_services/web_request.dart';
@@ -53,30 +52,27 @@ class _NewsFeedState extends State<NewsFeed> {
   }
 
 // Exit Alert Dialog box
-Future<bool> _onExit(){
-  return showDialog(
-    context: context,
-    builder: (context)=>AlertDialog(
-      title: Text("Do yo want to exit?"),
-      actions: <Widget>[
-        FlatButton(
-          child: Text("No"),
-          onPressed: ()=>Navigator.pop(context,false),
-        ),
-                FlatButton(
-          child: Text("Yes"),
-          onPressed: ()=>Navigator.pop(context,true),
-        ),
-      ]
-    )
-  );
-}
+  Future<bool> _onExit() {
+    return showDialog(
+        context: context,
+        builder: (context) =>
+            AlertDialog(title: Text("Do yo want to exit?"), actions: <Widget>[
+              FlatButton(
+                child: Text("No"),
+                onPressed: () => Navigator.pop(context, false),
+              ),
+              FlatButton(
+                child: Text("Yes"),
+                onPressed: () => Navigator.pop(context, true),
+              ),
+            ]));
+  }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: _onExit,
-          child: Scaffold(
+      child: Scaffold(
           appBar: AppBar(
             title: Text("Hacker News"),
             backgroundColor: Colors.redAccent,
@@ -85,24 +81,18 @@ Future<bool> _onExit(){
           body: ListView.builder(
             itemCount: _stories.length,
             itemBuilder: (_, index) {
-              return ListTile(
-                onTap: () {
-                  _navigateToShowCommentsPage(context, index);
-                },
+              return ExpansionTile(
                 title:
                     Text(_stories[index].title, style: TextStyle(fontSize: 18)),
-                trailing: Container(
-                    decoration: BoxDecoration(
-                        color: Colors.blueAccent,
-                        borderRadius: BorderRadius.all(Radius.circular(50))),
-                    alignment: Alignment.center,
-                    width: 50,
-                    height: 50,
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Text("${_stories[index].commentIds.length}",
-                          style: TextStyle(color: Colors.white)),
-                    )),
+                children: [
+                  MaterialButton(
+                    child:
+                        Text("${_stories[index].commentIds.length} comments"),
+                    onPressed: () {
+                      _navigateToShowCommentsPage(context, index);
+                    },
+                  ),
+                ],
               );
             },
           )),
