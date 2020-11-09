@@ -67,7 +67,9 @@ class _NewsFeedState extends State<NewsFeed> {
               ),
             ]));
   }
-  Future<Null> _refresh() async{
+
+  // Pull to Refresh
+  Future<Null> _refresh() async {
     await Future.delayed(Duration(seconds: 2));
     _populateTopStories();
     return null;
@@ -83,30 +85,41 @@ class _NewsFeedState extends State<NewsFeed> {
             backgroundColor: Colors.redAccent,
             centerTitle: true,
           ),
-          body: RefreshIndicator(
-            onRefresh: _refresh,
-            child: ListView.builder(
-              itemCount: _stories.length,
-              itemBuilder: (_, index) {
-                return ExpansionTile(
-                  title: Text(_stories[index].title,
-                      style: TextStyle(fontSize: 18)),
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+          body: Opacity(
+            opacity: 0.8,
+            child: Container(
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage("assets/model-2.jpg"),
+                      fit: BoxFit.fill)),
+              child: RefreshIndicator(
+                onRefresh: _refresh,
+                child: ListView.builder(
+                  itemCount: _stories.length,
+                  itemBuilder: (_, index) {
+                    return ExpansionTile(
+                      title: Text(_stories[index].title,
+                          style: TextStyle(color: Colors.white, fontSize: 18)),
                       children: [
-                        MaterialButton(
-                          child: Text(
-                              "${_stories[index].commentIds.length} comments"),
-                          onPressed: () {
-                            _navigateToShowCommentsPage(context, index);
-                          },
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            MaterialButton(
+                              child: Text(
+                                "${_stories[index].commentIds.length} comments",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              onPressed: () {
+                                _navigateToShowCommentsPage(context, index);
+                              },
+                            ),
+                          ],
                         ),
                       ],
-                    ),
-                  ],
-                );
-              },
+                    );
+                  },
+                ),
+              ),
             ),
           )),
     );
