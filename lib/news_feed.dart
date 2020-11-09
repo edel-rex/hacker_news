@@ -85,12 +85,17 @@ class _NewsFeedState extends State<NewsFeed> {
                 title:
                     Text(_stories[index].title, style: TextStyle(fontSize: 18)),
                 children: [
-                  MaterialButton(
-                    child:
-                        Text("${_stories[index].commentIds.length} comments"),
-                    onPressed: () {
-                      _navigateToShowCommentsPage(context, index);
-                    },
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      MaterialButton(
+                        child: Text(
+                            "${_stories[index].commentIds.length} comments"),
+                        onPressed: () {
+                          _navigateToShowCommentsPage(context, index);
+                        },
+                      ),
+                    ],
                   ),
                 ],
               );
