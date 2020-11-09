@@ -67,6 +67,11 @@ class _NewsFeedState extends State<NewsFeed> {
               ),
             ]));
   }
+  Future<Null> _refresh() async{
+    await Future.delayed(Duration(seconds: 2));
+    _populateTopStories();
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,28 +83,31 @@ class _NewsFeedState extends State<NewsFeed> {
             backgroundColor: Colors.redAccent,
             centerTitle: true,
           ),
-          body: ListView.builder(
-            itemCount: _stories.length,
-            itemBuilder: (_, index) {
-              return ExpansionTile(
-                title:
-                    Text(_stories[index].title, style: TextStyle(fontSize: 18)),
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      MaterialButton(
-                        child: Text(
-                            "${_stories[index].commentIds.length} comments"),
-                        onPressed: () {
-                          _navigateToShowCommentsPage(context, index);
-                        },
-                      ),
-                    ],
-                  ),
-                ],
-              );
-            },
+          body: RefreshIndicator(
+            onRefresh: _refresh,
+            child: ListView.builder(
+              itemCount: _stories.length,
+              itemBuilder: (_, index) {
+                return ExpansionTile(
+                  title: Text(_stories[index].title,
+                      style: TextStyle(fontSize: 18)),
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        MaterialButton(
+                          child: Text(
+                              "${_stories[index].commentIds.length} comments"),
+                          onPressed: () {
+                            _navigateToShowCommentsPage(context, index);
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                );
+              },
+            ),
           )),
     );
   }
