@@ -86,11 +86,11 @@ class _NewsFeedState extends State<NewsFeed> {
             centerTitle: true,
           ),
           body: Opacity(
-            opacity: 0.8,
+            opacity: 1,
             child: Container(
               decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: AssetImage("assets/model-2.jpg"),
+                      image: AssetImage("assets/model-3.jpg"),
                       fit: BoxFit.fill)),
               child: RefreshIndicator(
                 onRefresh: _refresh,
@@ -99,7 +99,7 @@ class _NewsFeedState extends State<NewsFeed> {
                   itemBuilder: (_, index) {
                     return ExpansionTile(
                       title: Text(_stories[index].title,
-                          style: TextStyle(color: Colors.white, fontSize: 18)),
+                          style: TextStyle(color: Colors.lime, fontSize: 18)),
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -110,7 +110,9 @@ class _NewsFeedState extends State<NewsFeed> {
                                 style: TextStyle(color: Colors.white),
                               ),
                               onPressed: () {
-                                _navigateToShowCommentsPage(context, index);
+                                if (_stories[index].commentIds.length > 0) {
+                                  _navigateToShowCommentsPage(context, index);
+                                }
                               },
                             ),
                           ],

@@ -1,6 +1,7 @@
 // Web requests and Data fetching
 
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:hacker_news/news_content.dart';
 import 'package:hacker_news/web_services/urlList.dart';
@@ -22,7 +23,7 @@ class Webrequest {
     final response = await http.get(UrlList.urlForTopStories());
     if (response.statusCode == 200) {
       Iterable storyIds = jsonDecode(response.body);
-      return Future.wait(storyIds.take(20).map((storyId) {
+      return Future.wait(storyIds.map((storyId) {
         return _getStory(storyId);
       }));
     } else {
