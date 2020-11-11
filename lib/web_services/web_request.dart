@@ -1,9 +1,8 @@
 // Web requests and Data fetching
 
 import 'dart:convert';
-import 'dart:math';
 
-import 'package:hacker_news/news_content.dart';
+import 'package:hacker_news/model/news_content.dart';
 import 'package:hacker_news/web_services/urlList.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
