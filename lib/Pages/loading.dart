@@ -12,11 +12,9 @@ class _LoadingState extends State<Loading> {
   @override
   Widget build(BuildContext context) {
     return SplashScreen(
+      seconds: 10,
       routeName: "/",
-      seconds: 5,
       imageBackground: AssetImage("assets/launch-image.png"),
-      //backgroundColor: Colors.grey[900],
-      //image: Image.asset('assets/loading-3.gif'),
       loadingText: Text("HACKER NEWS",
           style: TextStyle(
               fontSize: 55,

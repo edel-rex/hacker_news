@@ -3,11 +3,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:hacker_news/Pages/loader.dart';
 import 'package:hacker_news/model/news_content.dart';
 import 'package:hacker_news/web_services/web_request.dart';
 
 import 'comment_feed.dart';
-
 
 class NewsFeed extends StatefulWidget {
   @override
@@ -16,11 +16,18 @@ class NewsFeed extends StatefulWidget {
 
 class _NewsFeedState extends State<NewsFeed> {
   List<Story> _stories = List<Story>();
+  bool _trigger = true;
 
   @override
   void initState() {
     super.initState();
     _populateTopStories();
+  }
+
+  void trigger() {
+    setState(() {
+      _trigger = !_trigger;
+    });
   }
 
   void _populateTopStories() async {
@@ -31,6 +38,9 @@ class _NewsFeedState extends State<NewsFeed> {
     }).toList();
 
     setState(() {
+      if (stories.length > 300) {
+        _trigger = false;
+      }
       _stories = stories;
     });
   }
@@ -43,8 +53,10 @@ class _NewsFeedState extends State<NewsFeed> {
       return Comment.fromJSON(json);
     }).toList();
 
-    debugPrint("$comments");
-
+    //debugPrint("$comments");
+    setState(() {
+      trigger();
+    });
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -78,53 +90,59 @@ class _NewsFeedState extends State<NewsFeed> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _onExit,
-      child: Scaffold(
-          appBar: AppBar(
-            title: Text("Hacker News"),
-            backgroundColor: Colors.redAccent,
-            centerTitle: true,
-          ),
-          body: Opacity(
-            opacity: 1,
-            child: Container(
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage("assets/model-3.jpg"),
-                      fit: BoxFit.fill)),
-              child: RefreshIndicator(
-                onRefresh: _refresh,
-                child: ListView.builder(
-                  itemCount: _stories.length,
-                  itemBuilder: (_, index) {
-                    return ExpansionTile(
-                      title: Text(_stories[index].title,
-                          style: TextStyle(color: Colors.lime, fontSize: 18)),
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            MaterialButton(
-                              child: Text(
-                                "${_stories[index].commentIds.length} comments",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              onPressed: () {
-                                if (_stories[index].commentIds.length > 0) {
-                                  _navigateToShowCommentsPage(context, index);
-                                }
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
-                    );
-                  },
+    return _trigger
+        ? Loader()
+        : WillPopScope(
+            onWillPop: _onExit,
+            child: Scaffold(
+                appBar: AppBar(
+                  title: Text("Hacker News"),
+                  backgroundColor: Colors.redAccent,
+                  centerTitle: true,
                 ),
-              ),
-            ),
-          )),
-    );
+                body: Opacity(
+                  opacity: 1,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage("assets/model-3.jpg"),
+                            fit: BoxFit.fill)),
+                    child: RefreshIndicator(
+                      onRefresh: _refresh,
+                      child: ListView.builder(
+                        itemCount: _stories.length,
+                        itemBuilder: (_, index) {
+                          return ExpansionTile(
+                            title: Text(_stories[index].title,
+                                style: TextStyle(
+                                    color: Colors.lime, fontSize: 18)),
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  MaterialButton(
+                                    child: Text(
+                                      "${_stories[index].commentIds.length} comments",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    onPressed: () {
+                                      if (_stories[index].commentIds.length >
+                                          0) {
+                                        trigger();
+                                        _navigateToShowCommentsPage(
+                                            context, index);
+                                      }
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                )),
+          );
   }
 }

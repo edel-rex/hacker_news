@@ -40,8 +40,7 @@ class CommentListPage extends StatelessWidget {
                       title: Padding(
                         padding: const EdgeInsets.only(top: 8.0),
                         child: Text(this.comments[index].text,
-                            style:
-                                TextStyle(fontSize: 18, color: Colors.lime)),
+                            style: TextStyle(fontSize: 18, color: Colors.lime)),
                       ));
             },
           ),

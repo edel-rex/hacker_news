@@ -10,7 +10,6 @@ class Comment {
   }
 }
 
-
 class Story {
   final String title;
   final String url;
