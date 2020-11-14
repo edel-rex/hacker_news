@@ -8,6 +8,7 @@ import 'package:hacker_news/model/news_content.dart';
 import 'package:hacker_news/web_services/web_request.dart';
 
 import 'comment_feed.dart';
+import 'loader.dart';
 
 class NewsFeed extends StatefulWidget {
   @override
@@ -16,7 +17,7 @@ class NewsFeed extends StatefulWidget {
 
 class _NewsFeedState extends State<NewsFeed> {
   List<Story> _stories = List<Story>();
-  bool _trigger = true;
+  bool _loader = true;
 
   @override
   void initState() {
@@ -24,9 +25,9 @@ class _NewsFeedState extends State<NewsFeed> {
     _populateTopStories();
   }
 
-  void trigger() {
+  void loader() {
     setState(() {
-      _trigger = !_trigger;
+      _loader = !_loader;
     });
   }
 
@@ -38,8 +39,8 @@ class _NewsFeedState extends State<NewsFeed> {
     }).toList();
 
     setState(() {
-      if (stories.length > 300) {
-        _trigger = false;
+      if (stories.length > 10) {
+        _loader = false;
       }
       _stories = stories;
     });
@@ -55,7 +56,7 @@ class _NewsFeedState extends State<NewsFeed> {
 
     //debugPrint("$comments");
     setState(() {
-      trigger();
+      loader();
     });
     Navigator.push(
         context,
@@ -63,7 +64,6 @@ class _NewsFeedState extends State<NewsFeed> {
             builder: (context) =>
                 CommentListPage(story: story, comments: comments)));
   }
-
 // Exit Alert Dialog box
   Future<bool> _onExit() {
     return showDialog(
@@ -90,7 +90,7 @@ class _NewsFeedState extends State<NewsFeed> {
 
   @override
   Widget build(BuildContext context) {
-    return _trigger
+    return _loader
         ? Loader()
         : WillPopScope(
             onWillPop: _onExit,
@@ -128,7 +128,7 @@ class _NewsFeedState extends State<NewsFeed> {
                                     onPressed: () {
                                       if (_stories[index].commentIds.length >
                                           0) {
-                                        trigger();
+                                        loader();
                                         _navigateToShowCommentsPage(
                                             context, index);
                                       }

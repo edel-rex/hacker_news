@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'Pages/loading.dart';
+import 'package:hacker_news/Pages/intro.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
